@@ -12,7 +12,8 @@ jobs:
 
       - name: Prepare arXiv tar file
         run: mkdir ../ToArXiv &&
-          cp -r ./[^.]* ../ToArXiv/ &&
+          cp -r ./* ../ToArXiv/ &&
+          find . -mindepth 1 -maxdepth 1 -name ".*" -exec rm -rf {} + &&
           tar -cf ToArXiv.tar ../ToArXiv/*
 
       - name: Run `latexmk`
