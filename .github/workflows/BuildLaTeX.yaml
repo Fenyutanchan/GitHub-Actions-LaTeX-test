@@ -13,7 +13,7 @@ jobs:
 
       - name: Prepare ToArXiv.tar
         run: find . -mindepth 1 -maxdepth 1 -name ".*" -exec rm -rf {} + &&
-          tar -cf ToArXiv.tar ./*
+          tar -cf ToArXiv.tar *
 
       - name: Build LaTeX
         uses: xu-cheng/latex-action@v3
