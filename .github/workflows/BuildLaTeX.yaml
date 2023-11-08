@@ -3,21 +3,18 @@ on:
   push:
     branches: [ master ]
 jobs:
-  Preparation:
-    runs-on: ubuntu-latest
   LaTeX-Building:
-    needs: Preparation
     runs-on: ubuntu-latest
     container: texlive/texlive:latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Run `latexmk`
         run: latexmk -interaction=nonstopmode -file-line-error -pdf main
 
       - name: Upload PDF
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Compiled PDF
           path: ./main.pdf
