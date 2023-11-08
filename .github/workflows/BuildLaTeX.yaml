@@ -20,6 +20,7 @@ jobs:
         run: latexmk -interaction=nonstopmode -file-line-error -pdf main
 
       - name: Renew arXiv tar file
+        shell: bash
         run: if [ -f "./main.bbl" ]; then
             tar --append -f ToArXiv.tar main.bbl
           fi && gzip ToArXiv.tar
