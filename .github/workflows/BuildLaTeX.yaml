@@ -28,5 +28,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: compiled-PDF
-          path: ./main.pdf ./ToArXiv.tar.gz
+          path: |
+            ./main.pdf
+            ./ToArXiv.tar.gz
           if-no-files-found: error
