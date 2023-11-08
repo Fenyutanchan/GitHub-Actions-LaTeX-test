@@ -10,11 +10,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare arXiv tar.gz file
+        run: mkdir ../ToArXiv &&
+          cp -r ./* ../ToArXiv/ &&
+          rm -rf ../ToArXiv/.* &&
+          tar -czvf ToArXiv.tar.gz ../ToArXiv/
+
       - name: Run `latexmk`
         run: latexmk -interaction=nonstopmode -file-line-error -pdf main
 
       - name: Upload PDF
         uses: actions/upload-artifact@v3
         with:
-          name: Compiled PDF
-          path: ./main.pdf
+          name: compiled-PDF
+          path: ./main.pdf ./ToArXiv.tar.gz
+          if-no-files-found: error
