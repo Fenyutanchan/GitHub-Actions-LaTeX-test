@@ -13,7 +13,7 @@ jobs:
       - name: Prepare arXiv tar file
         run: mkdir ../ToArXiv &&
           cp -r ./* ../ToArXiv/ &&
-          rm -rf ../ToArXiv/.?* &&
+          rm -rf ../ToArXiv/.[^.]* &&
           tar -cf ToArXiv.tar ../ToArXiv/
 
       - name: Run `latexmk`
