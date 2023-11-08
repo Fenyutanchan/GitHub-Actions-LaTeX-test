@@ -2,33 +2,39 @@ name: Build LaTeX
 on:
   push:
     branches: [ master ]
+  pull_request:
+
 jobs:
   LaTeX-Building:
     runs-on: ubuntu-latest
-    container: texlive/texlive:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare arXiv tar file
-        run: mkdir ../ToArXiv &&
-          cp -r ./* ../ToArXiv/ &&
-          find . -mindepth 1 -maxdepth 1 -name ".*" -exec rm -rf {} + &&
-          tar -cf ToArXiv.tar ../ToArXiv/*
+      - name: Prepare ToArXiv.tar
+        run: find . -mindepth 1 -maxdepth 1 -name ".*" -exec rm -rf {} + &&
+          tar -cf ToArXiv.tar ./*
 
-      - name: Run `latexmk`
-        run: latexmk -interaction=nonstopmode -file-line-error -pdf main
+      - name: Build LaTeX
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.tex
 
       - name: Renew arXiv tar file
         run: if [ -f "./main.bbl" ]; then
             tar --append -f ToArXiv.tar main.bbl;
           fi && gzip ToArXiv.tar
 
-      - name: Upload PDF
+      - name: Upload built PDF
         uses: actions/upload-artifact@v3
         with:
-          name: compiled-PDF
-          path: |
-            ./main.pdf
-            ./ToArXiv.tar.gz
+          name: main
+          path: ./main.pdf
+          if-no-files-found: error
+
+      - name: Upload arXiv .tar.gz file
+        uses: actions/upload-artifact@v3
+        with:
+          name: arXiv
+          path: ./ToArXiv.tar.gz
           if-no-files-found: error
