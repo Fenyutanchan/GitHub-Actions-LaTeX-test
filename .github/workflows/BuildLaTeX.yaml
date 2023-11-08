@@ -10,14 +10,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare arXiv tar.gz file
+      - name: Prepare arXiv tar file
         run: mkdir ../ToArXiv &&
           cp -r ./* ../ToArXiv/ &&
           rm -rf ../ToArXiv/.* &&
-          tar -czvf ToArXiv.tar.gz ../ToArXiv/
+          tar -cf ToArXiv.tar ../ToArXiv/
 
       - name: Run `latexmk`
         run: latexmk -interaction=nonstopmode -file-line-error -pdf main
+
+      - name: Renew arXiv tar file
+        run: if [ -f "./main.bbl" ]; then
+            tar --append -f ToArXiv.tar main.bbl
+          fi && gzip ToArXiv.tar
 
       - name: Upload PDF
         uses: actions/upload-artifact@v3
